@@ -1,28 +1,45 @@
+
+import 'package:expensetracker/model/expense_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../controller/expense_provider.dart';
-import '../../model/expense_model.dart';
 import '../widgets/text_widget.dart';
 
-class AddDialogue extends StatelessWidget {
-  AddDialogue({
-    super.key,
+class EditDialogue extends StatefulWidget {
+  EditDialogue({
+    Key? key,
     required this.categoryIcons,
     required this.categoryNames,
-  });
+    required this.expense,
+  }) : super(key: key);
+
+  final ExpenseModel expense;
   final List<IconData> categoryIcons;
   final List<String> categoryNames;
-  final style = GoogleFonts.raleway();
 
+  @override
+  State<EditDialogue> createState() => _EditDialogueState();
+}
+
+class _EditDialogueState extends State<EditDialogue> {
   TextEditingController amountController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   String? selectedCategory;
-  final uuid = Uuid();
+  final style = GoogleFonts.raleway();
+
+  @override
+  void initState() {
+    super.initState();
+    amountController.text = widget.expense.amount.toString();
+    descriptionController.text = widget.expense.description ?? '';
+    dateController.text = DateFormat('dd/MM/yyyy').format(widget.expense.date!);
+    selectedCategory = widget.expense.category;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -30,7 +47,7 @@ class AddDialogue extends StatelessWidget {
         builder: (context, value, child) => SingleChildScrollView(
           child: AlertDialog(
             title: Text(
-              'Add Expense',
+              'Edit Expense',
               style: GoogleFonts.raleway(color: Color.fromARGB(255, 6, 43, 66)),
             ),
             actions: [
@@ -44,11 +61,11 @@ class AddDialogue extends StatelessWidget {
               TextWidget(
                 style: style,
                 controller: dateController,
-                hintText: 'Date',
                 icon: Icons.date_range,
                 onTap: () {
                   value.selctDate(context, dateController);
                 },
+                hintText: 'Date',
                 type: TextInputType.phone,
               ),
               SizedBox(height: 15),
@@ -65,17 +82,17 @@ class AddDialogue extends StatelessWidget {
                 ),
                 value: selectedCategory,
                 onChanged: (newValue) {
-                  selectedCategory = newValue;
+                    selectedCategory = newValue;
                 },
-                items: List.generate(categoryIcons.length, (index) {
+                items: List.generate(widget.categoryIcons.length, (index) {
                   return DropdownMenuItem<String>(
-                    value: categoryNames[index],
+                    value: widget.categoryNames[index],
                     child: Row(
                       children: [
-                        Icon(categoryIcons[index]),
-                        SizedBox(width: 25),
+                        Icon(widget.categoryIcons[index]),
+                        SizedBox(width: 10),
                         Text(
-                          categoryNames[index],
+                          widget.categoryNames[index],
                           style: style,
                         ),
                       ],
@@ -88,6 +105,7 @@ class AddDialogue extends StatelessWidget {
                 style: style,
                 controller: descriptionController,
                 hintText: 'Description',
+                type: TextInputType.text,
                 maxLines: 2,
               ),
               SizedBox(
@@ -98,9 +116,9 @@ class AddDialogue extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      await value.addExpenses(
+                      await value.updateExpense(
                         ExpenseModel(
-                          id: uuid.v4(),
+                          id: widget.expense.id,
                           amount: int.parse(amountController.text),
                           date: DateFormat('dd/MM/yyyy')
                               .parse(dateController.text),
@@ -115,7 +133,7 @@ class AddDialogue extends StatelessWidget {
                       value.loadData();
                     },
                     child: Text(
-                      'Add',
+                      'Save',
                       style: style,
                     ),
                   ),
