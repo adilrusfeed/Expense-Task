@@ -1,5 +1,5 @@
 import 'package:expensetracker/model/expense_model.dart';
-import 'package:expensetracker/view/home_page.dart';
+import 'package:expensetracker/view/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
