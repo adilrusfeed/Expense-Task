@@ -18,6 +18,7 @@ class DataBase {
           expenseDb.values.toList().indexWhere((expense) => expense.id == id);
       if (index != -1) {
         await expenseDb.deleteAt(index);
+        
       }
     } catch (e) {
       throw Exception('Error in deleting: $e');

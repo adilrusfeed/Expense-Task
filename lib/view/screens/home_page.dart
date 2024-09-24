@@ -1,6 +1,10 @@
 import 'package:expensetracker/controller/expense_provider.dart';
+import 'package:expensetracker/view/widgets/category_items.dart';
+import 'package:expensetracker/view/widgets/category_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'add_expense.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
@@ -38,8 +42,13 @@ class Homepage extends StatelessWidget {
                             height: size.height * 0.18,
                             child: Align(
                               alignment: Alignment.topCenter,
+                              child: CategoryList(
+                                  categoryNames: CategoryItems.categoryNames,
+                                  categoryIcons: CategoryItems.categoryIcons,
+                                  size: size),
                             ),
                           ),
+                          // Expanded()
                         ],
                       ),
                     )
@@ -49,6 +58,24 @@ class Homepage extends StatelessWidget {
             ),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        shape: CircleBorder(),
+        backgroundColor: Colors.orange,
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        onPressed: () async {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AddDialogue(
+                  categoryIcons: CategoryItems.categoryIcons,
+                  categoryNames: CategoryItems.categoryNames);
+            },
+          );
+        },
       ),
     );
   }

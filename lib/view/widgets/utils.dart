@@ -33,4 +33,5 @@ class AppUtils {
     }
     return totalAmount.toStringAsFixed(2);
   }
+ 
 }
