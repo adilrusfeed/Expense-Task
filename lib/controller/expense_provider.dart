@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:expensetracker/model/expense_model.dart';
 import 'package:expensetracker/service/expense_service.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,7 @@ class ExpenseProvider extends ChangeNotifier {
   }
   Future<void> loadData() async {
     try {
-      final expenseBox = await Hive.box<ExpenseModel>('expense_box');
+      final expenseBox = Hive.box<ExpenseModel>('expense_box');
       expenses = expenseBox.values.toList();
       notifyListeners();
     } catch (e) {
@@ -87,7 +89,7 @@ class ExpenseProvider extends ChangeNotifier {
     if (pickedDate != null) {
       final formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
       date.text = formattedDate;
-      print('Selected date: $formattedDate');
+      log('Selected date: $formattedDate');
     }
     notifyListeners();
   }
