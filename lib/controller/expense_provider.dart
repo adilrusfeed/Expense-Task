@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
-
 class ExpenseProvider extends ChangeNotifier {
   List<ExpenseModel> expenses = [];
   final box = Hive.box<ExpenseModel>('expense_box');
-   ExpenseProvider() {
+  ExpenseProvider() {
     init();
   }
   Future<void> init() async {
     await Hive.openBox<ExpenseModel>('expense_box');
     loadData();
   }
+
   Future<void> loadData() async {
     try {
       final expenseBox = Hive.box<ExpenseModel>('expense_box');
@@ -34,10 +34,10 @@ class ExpenseProvider extends ChangeNotifier {
       final date = expense.date;
       final description = expense.description;
       final category = expense.category;
-      if (id!=null &&
-          amount!=null &&
+      if (id != null &&
+          amount != null &&
           date != null &&
-          description!=null &&
+          description != null &&
           category!.isNotEmpty) {
         ExpenseModel expense = ExpenseModel(
           id: id,
@@ -54,6 +54,11 @@ class ExpenseProvider extends ChangeNotifier {
     }
   }
 
+  void resetExpenses() {
+    expenses.clear();
+    notifyListeners();
+  }
+
   updateExpense(ExpenseModel expens) async {
     try {
       final amount = expens.amount;
@@ -61,9 +66,9 @@ class ExpenseProvider extends ChangeNotifier {
       final description = expens.description;
       final category = expens.category;
       if (expens.id != null &&
-          amount!=null &&
+          amount != null &&
           date != null &&
-          description!=null &&
+          description != null &&
           category!.isNotEmpty) {
         ExpenseModel expense = ExpenseModel(
           id: expens.id,
@@ -79,7 +84,9 @@ class ExpenseProvider extends ChangeNotifier {
       throw Exception('Error in adding expense$e');
     }
   }
-  Future<void> selctDate(BuildContext context, TextEditingController date) async {
+
+  Future<void> selctDate(
+      BuildContext context, TextEditingController date) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -93,5 +100,4 @@ class ExpenseProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-
 }

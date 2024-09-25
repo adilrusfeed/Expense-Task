@@ -3,6 +3,7 @@ import 'package:expensetracker/view/screens/expense_list.dart';
 import 'package:expensetracker/view/widgets/category_items.dart';
 import 'package:expensetracker/view/widgets/category_list.dart';
 import 'package:expensetracker/view/widgets/color_gradient.dart';
+import 'package:expensetracker/view/widgets/drawer_page.dart';
 import 'package:expensetracker/view/widgets/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,6 +25,32 @@ class Homepage extends StatelessWidget {
         ),
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 6, 18, 49),
+      ),
+      drawer: Drawer(
+        elevation: 100,
+        shadowColor: const Color.fromARGB(255, 227, 227, 226),
+        child: Container(
+          color: Color(0xFFFFFFFF),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    "settings",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(child: DrawerHeaderWidget()),
+            ],
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(
