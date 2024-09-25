@@ -148,8 +148,6 @@ class _ChartPageState extends State<ChartPage> {
         return Colors.red;
       case 'Grociery':
         return Colors.yellow;
-      case 'Food':
-        return Colors.green;
       default:
         return Colors.grey;
     }

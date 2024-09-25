@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
 
+import 'package:expensetracker/view/screens/about_page.dart';
 import 'package:expensetracker/view/screens/chart_page.dart';
 import 'package:expensetracker/view/widgets/drawer_items.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,15 @@ class DrawerHeaderWidget extends StatelessWidget {
             },
             child: DrawerItem(
                 text: "Summary", icon: Icons.insert_chart_outlined_outlined),
+          ),
+          Divider(),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => AboutPage(),
+              ));
+            },
+            child: DrawerItem(text: "About", icon: Icons.info),
           ),
           Divider(),
           GestureDetector(
