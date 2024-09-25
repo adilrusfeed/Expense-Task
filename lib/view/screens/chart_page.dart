@@ -4,9 +4,15 @@ import 'package:provider/provider.dart';
 
 import '../../controller/expense_provider.dart';
 
-class ChartPage extends StatelessWidget {
+class ChartPage extends StatefulWidget {
   const ChartPage({super.key});
 
+  @override
+  State<ChartPage> createState() => _ChartPageState();
+}
+
+class _ChartPageState extends State<ChartPage> {
+  int? _touchedIndex;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,9 +23,10 @@ class ChartPage extends StatelessWidget {
         builder: (context, value, child) {
           final expenses = value.expenses;
 
-          // Group expenses by category
           Map<String, double> categoryTotals = {};
+          double totalExpenses = 0.0;
           for (var expense in expenses) {
+            totalExpenses += expense.amount!;
             if (categoryTotals.containsKey(expense.category)) {
               categoryTotals[expense.category!] =
                   categoryTotals[expense.category!]! + expense.amount!;
@@ -35,20 +42,38 @@ class ChartPage extends StatelessWidget {
                 Expanded(
                   child: PieChart(PieChartData(
                     sections: categoryTotals.entries.map((entry) {
+                      final isTouched = _touchedIndex ==
+                          categoryTotals.keys.toList().indexOf(entry.key);
+
                       return PieChartSectionData(
-                        title: entry.key,
-                        value: entry.value,
-                        color: _getCategoryColor(entry.key),
-                        titleStyle: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      );
+                          title: isTouched
+                              ? '${entry.key}\n\$${entry.value.toStringAsFixed(2)}'
+                              : '\$${entry.value.toStringAsFixed(2)}',
+                          value: entry.value,
+
+                          color: _getCategoryColor(entry.key),
+                          titleStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: isTouched ? 18 : 14),
+                          radius: isTouched ? 80 : 60);
                     }).toList(),
                     centerSpaceRadius: 50,
                     sectionsSpace: 4,
-                    pieTouchData:
-                        PieTouchData(touchCallback: (event, response) {}),
+                    pieTouchData: PieTouchData(
+                      touchCallback: (event, response) {
+                        setState(() {
+                          if (!event.isInterestedForInteractions ||
+                              response == null ||
+                              response.touchedSection == null) {
+                            _touchedIndex = -1;
+                            return;
+                          }
+                          _touchedIndex =
+                              response.touchedSection!.touchedSectionIndex;
+                        });
+                      },
+                    ),
                     startDegreeOffset: 180,
                   )),
                 ),
@@ -79,7 +104,6 @@ class ChartPage extends StatelessWidget {
     );
   }
 
-  // Helper function to get category colors
   Color _getCategoryColor(String category) {
     switch (category) {
       case 'Food':
@@ -88,6 +112,12 @@ class ChartPage extends StatelessWidget {
         return Colors.blue;
       case 'Entertainment':
         return Colors.orange;
+      case 'Rent':
+        return Colors.red;
+      case 'Grociery':
+        return Colors.yellow;
+      case 'Food':
+        return Colors.green;
       default:
         return Colors.grey;
     }

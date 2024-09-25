@@ -19,6 +19,7 @@ class Homepage extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         title: Text(
           "E X P E N S E  T R A C K",
           style: TextStyle(color: Colors.white),
