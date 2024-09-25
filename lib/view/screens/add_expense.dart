@@ -33,6 +33,7 @@ class AddDialogue extends StatelessWidget {
               'Add Expense',
               style: GoogleFonts.raleway(color: Color.fromARGB(255, 6, 43, 66)),
             ),
+            //.......................................................................//
             actions: [
               TextWidget(
                 style: GoogleFonts.montserrat(),
@@ -93,6 +94,8 @@ class AddDialogue extends StatelessWidget {
               SizedBox(
                 height: 15,
               ),
+
+              //.......................................................................//
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
