@@ -17,6 +17,14 @@ class Homepage extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "E X P E N S E  T R A C K",
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+        backgroundColor: Color.fromARGB(255, 6, 18, 49),
+      ),
       body: SingleChildScrollView(
         child: Container(
           height: size.height,

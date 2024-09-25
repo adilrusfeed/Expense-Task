@@ -24,7 +24,7 @@ class ExpenseList extends StatelessWidget {
             key: Key(expense.id.toString()),
             background: Container(
                 color: Colors.red.withOpacity(0.5),
-                child: Icon(
+                child: const Icon(
                   Icons.delete,
                   color: Colors.white,
                 )),
@@ -37,15 +37,32 @@ class ExpenseList extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text('Delete Expense'),
-                    content:
-                        Text('Are you sure you want to delete this expense!'),
+                    title: Row(
+                      children: const [
+                        Icon(Icons.warning, color: Colors.red),
+                        SizedBox(width: 10),
+                        Text('Delete Expense'),
+                      ],
+                    ),
+                    content: const Text(
+                        'Are you sure you want to delete this expense?'),
                     actions: [
                       TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text("Delete"))
+                        onPressed: () {
+                          Navigator.of(context).pop(false); // Cancel deletion
+                        },
+                        child: const Text("Cancel"),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          // Perform delete
+                          await DataBase.deleteExpense(expense.id!);
+                          await value
+                              .loadData(); // Refresh the data after deletion
+                          Navigator.of(context).pop(true); // Confirm deletion
+                        },
+                        child: const Text("Delete"),
+                      ),
                     ],
                   );
                 },
@@ -55,8 +72,9 @@ class ExpenseList extends StatelessWidget {
               title: Text(
                 '${expense.description}',
                 style: GoogleFonts.montserrat(
-                    color: Color.fromARGB(255, 3, 58, 69),
-                    fontWeight: FontWeight.w500),
+                  color: const Color.fromARGB(255, 3, 58, 69),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               subtitle: Padding(
                 padding: const EdgeInsets.only(top: 6),
@@ -68,7 +86,7 @@ class ExpenseList extends StatelessWidget {
                       style: GoogleFonts.montserrat(
                           color: Colors.grey, fontSize: 10),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Container(
@@ -86,7 +104,7 @@ class ExpenseList extends StatelessWidget {
                         child: Text(
                           '${expense.category}',
                           style: GoogleFonts.raleway(
-                              color: Color.fromARGB(255, 73, 73, 73),
+                              color: const Color.fromARGB(255, 73, 73, 73),
                               fontSize: 10),
                         ),
                       ),
@@ -103,13 +121,13 @@ class ExpenseList extends StatelessWidget {
                       Text(
                         ' ₹${expense.amount}/-',
                         style: GoogleFonts.montserrat(
-                            color: Color.fromARGB(255, 8, 85, 148),
+                            color: const Color.fromARGB(255, 8, 85, 148),
                             fontSize: 20,
                             fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   InkWell(
@@ -124,7 +142,7 @@ class ExpenseList extends StatelessWidget {
                           },
                         );
                       },
-                      child: Icon(Iconsax.edit))
+                      child: const Icon(Iconsax.edit))
                 ],
               ),
             ),
