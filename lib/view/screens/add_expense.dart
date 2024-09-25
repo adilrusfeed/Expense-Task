@@ -98,21 +98,45 @@ class AddDialogue extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      await value.addExpenses(
-                        ExpenseModel(
-                          id: uuid.v4(),
-                          amount: int.parse(amountController.text),
-                          date: DateFormat('dd/MM/yyyy')
-                              .parse(dateController.text),
-                          category: selectedCategory!,
-                          description: descriptionController.text,
-                        ),
-                      );
-                      amountController.clear();
-                      descriptionController.clear();
-                      dateController.clear();
-                      Navigator.of(context).pop();
-                      value.loadData();
+                      if (amountController.text.isEmpty ||
+                          dateController.text.isEmpty ||
+                          selectedCategory == null ||
+                          descriptionController.text.isEmpty) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Validation Error'),
+                              content: const Text('All fields must be filled!'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        await value.addExpenses(
+                          ExpenseModel(
+                            id: uuid.v4(),
+                            amount: int.parse(amountController.text),
+                            date: DateFormat('dd/MM/yyyy')
+                                .parse(dateController.text),
+                            category: selectedCategory!,
+                            description: descriptionController.text,
+                          ),
+                        );
+                        amountController.clear();
+                        descriptionController.clear();
+                        dateController.clear();
+                        Navigator.of(context).pop();
+                        value.loadData();
+                      }
+                      ;
                     },
                     child: Text(
                       'Add',
