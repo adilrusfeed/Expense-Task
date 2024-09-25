@@ -1,8 +1,11 @@
+import 'package:expensetracker/view/screens/add_expense.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../../controller/expense_provider.dart';
+import '../widgets/category_items.dart';
 
 class ChartPage extends StatefulWidget {
   const ChartPage({super.key});
@@ -17,11 +20,41 @@ class _ChartPageState extends State<ChartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Expense Summary'),
+        title: Text(
+          'E x p e n s e  S u m m a r y',
+        ),
+        centerTitle: true,
       ),
       body: Consumer<ExpenseProvider>(
         builder: (context, value, child) {
           final expenses = value.expenses;
+          if (expenses.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Lottie.asset("assets/empty lottie.json", height: 200),
+                  SizedBox(height: 20),
+                  Text(
+                    "No expenses recorded yet\n Add Expense",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Navigate to the Add Expense screen
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => AddDialogue(
+                            categoryIcons: CategoryItems.categoryIcons,
+                            categoryNames: CategoryItems.categoryNames),
+                      ));
+                    },
+                    child: Text('Add Expense'),
+                  ),
+                ],
+              ),
+            );
+          }
 
           Map<String, double> categoryTotals = {};
           double totalExpenses = 0.0;
@@ -50,7 +83,6 @@ class _ChartPageState extends State<ChartPage> {
                               ? '${entry.key}\n\$${entry.value.toStringAsFixed(2)}'
                               : '\$${entry.value.toStringAsFixed(2)}',
                           value: entry.value,
-
                           color: _getCategoryColor(entry.key),
                           titleStyle: TextStyle(
                               color: Colors.white,
